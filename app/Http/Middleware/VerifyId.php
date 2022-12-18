@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Customer;
 use Closure;
 use Illuminate\Http\Request;
-use App\Http\Controllers\CustomerController;
+
 
 class VerifyId
 {
@@ -22,11 +23,13 @@ class VerifyId
         //1. coger el id
         $id = $request->id;
         //2. validar
-        if (!is_numeric($id) || $id < 0 || !($id/1 == $id)){
-            return response('error', 422);
+        if (!is_numeric($id) || $id < 0 || !($id/1 == $id)) {
+            return response('Introduce un Id correcto', 422);
         }
         //3. dejar seguir o tirar hacia atrás
         return $next($request);
     }
+
+
 
 }

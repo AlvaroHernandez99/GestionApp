@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class CustomerController extends Controller
 {
@@ -19,13 +23,23 @@ class CustomerController extends Controller
     }
 
     public function getId(Request $request, $id){
-        $respuesta = Customer::findOrFail($id);
-        $response = [
-            'success' => true,
-            'message' => "Cliente con id: $id obtenido correctamente",
-            'data' => $respuesta
-        ];
-        return response()->json($response);
+        //$exist = Rule::exists(Customer::class, 'id');
+        try {
+            $respuesta = Customer::findOrFail($id);
+            $response = [
+                'success' => true,
+                'message' => "Cliente con id: $id obtenido correctamente",
+                'data' => $respuesta
+            ];
+            return response()->json($response);
+        } catch (ModelNotFoundException $ex) {
+            return $a = [
+                'success' => false,
+                'message' => "Error, el Id introducido no existe ne la db"
+            ];
+            return response()->json($a);
+        }
+
     }
 
     public function create(Request $request){
@@ -57,40 +71,69 @@ class CustomerController extends Controller
     }
 
     public function delete(Request $request, $id){
-        $respuesta = Customer::findOrFail($id);
-        DB::table('customers')->where('id', $id)->delete();
-        $response = [
-            'success' => true,
-            'message' => "Cliente con id: $id borrado correctamente",
-            'data' => $respuesta
-        ];
-        return response()->json($response);
+        try {
+            $respuesta = Customer::findOrFail($id);
+            DB::table('customers')->where('id', $id)->delete();
+            $response = [
+                'success' => true,
+                'message' => "Cliente con id: $id borrado correctamente",
+                'data' => $respuesta
+            ];
+            return response()->json($response);
+        } catch (ModelNotFoundException $ex) {
+            return $a = [
+                'success' => false,
+                'message' => "Error, el Id introducido no existe ne la db"
+            ];
+            return response()->json($a);
+        }
+
     }
 
     public function modify(Request $request, $id){
-        Customer::findOrFail($id);
-        $name = $request->input('name');
-        $phone = $request->input('phone');
-        $age = $request->input('age');
-        $password = $request->input('password');
-        $email = $request->input('email');
-        $gender = $request->input('gender');
+        try {
+            Customer::findOrFail($id);
+            $name = $request->input('name');
 
-        $datos = $request->validate([
-            'name' => 'string',
-            'phone' => 'string',
-            'age' => 'integer',
-            'password' => "string",
-            'email' => 'string|unique:customers',
-            'gender' => 'string'
-        ]);
-        //query building
-        DB::table('customers')->where('id', $id)->update($datos);
-        $response = [
-            'success' => true,
-            'message' => "Cliente con id: $id modificado correctamente",
-            'data' => $datos
-        ];
-        return response()->json($response);
+            /*if(isEmpty(Customer::$name)){
+                $name = "no introducido";}*/
+
+            $phone = $request->input('phone');
+            $age = $request->input('age');
+            $password = $request->input('password');
+            $email = $request->input('email');
+            $gender = $request->input('gender');
+
+            $datos = $request->validate([
+                'name' => 'string',
+                'phone' => 'string',
+                'age' => 'integer',
+                'password' => "string",
+                'email' => 'string|unique:customers',
+                'gender' => 'string'
+            ]);
+            //query building
+            DB::table('customers')->where('id', $id)->update($datos);
+            $response = [
+                'success' => true,
+                'message' => "Cliente con id: $id modificado correctamente",
+                'data' => $datos
+            ];
+            return response()->json($response);
+        } catch (ModelNotFoundException $ex) {
+            return $a = [
+                'success' => false,
+                'message' => "Error, el Id introducido no existe ne la db"
+            ];
+            return response()->json($a);
+        }
     }
+
+
+
+
+
+    /*public function ifExist($id) {
+        DB::table('customers')->where('id', $id)->exists();
+    }*/
 }

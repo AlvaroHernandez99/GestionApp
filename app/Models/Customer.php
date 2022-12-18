@@ -8,6 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'phone',
+        'email',
+        'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'created_at',
+        'updated_at',
+        'remember_token',
+    ];
 }
