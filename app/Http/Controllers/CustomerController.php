@@ -16,14 +16,13 @@ class CustomerController extends Controller
             'data' => $respuesta
         ];
         return response()->json($response);
-        //return response()->json('Devuelvo todos los clientes');
     }
 
     public function getId(Request $request, $id){
         $respuesta = Customer::findOrFail($id);
         $response = [
             'success' => true,
-            'message' => "Cliente obtenido correctamente",
+            'message' => "Cliente con id: $id obtenido correctamente",
             'data' => $respuesta
         ];
         return response()->json($response);
@@ -40,8 +39,8 @@ class CustomerController extends Controller
         $datos = $request->validate([
             //obligatorio y tiene que ser el tipo de pariable marcado
             'name' => 'string',
-            'phone' => 'string', //como lo pongo nullable¿?¿¿
-            'age' => 'integer', //como lo pongo nullable¿?¿¿
+            'phone' => 'string',
+            'age' => 'integer',
             'password' => "string",
             'email' => 'required|string|unique:customers',
             'gender' => 'string'
@@ -62,13 +61,14 @@ class CustomerController extends Controller
         DB::table('customers')->where('id', $id)->delete();
         $response = [
             'success' => true,
-            'message' => "Cliente borrado correctamente",
+            'message' => "Cliente con id: $id borrado correctamente",
             'data' => $respuesta
         ];
         return response()->json($response);
     }
 
-    public function modify(Request $request){
+    public function modify(Request $request, $id){
+        Customer::findOrFail($id);
         $name = $request->input('name');
         $phone = $request->input('phone');
         $age = $request->input('age');
@@ -77,15 +77,20 @@ class CustomerController extends Controller
         $gender = $request->input('gender');
 
         $datos = $request->validate([
-            //obligatorio y tiene que ser el tipo de pariable marcado
             'name' => 'string',
             'phone' => 'string',
             'age' => 'integer',
             'password' => "string",
-            'email' => 'required|string|unique:customers',
+            'email' => 'string|unique:customers',
             'gender' => 'string'
         ]);
         //query building
-        DB::table('customers')->update($datos);
+        DB::table('customers')->where('id', $id)->update($datos);
+        $response = [
+            'success' => true,
+            'message' => "Cliente con id: $id modificado correctamente",
+            'data' => $datos
+        ];
+        return response()->json($response);
     }
 }
