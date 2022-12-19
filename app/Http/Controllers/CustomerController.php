@@ -52,12 +52,12 @@ class CustomerController extends Controller
 
         $datos = $request->validate([
             //obligatorio y tiene que ser el tipo de pariable marcado
-            'name' => 'string',
-            'phone' => 'string',
-            'age' => 'integer',
-            'password' => "string",
+            'name' => 'required|string',
+            'phone' => 'nullable|string',
+            'age' => 'nullable|integer',
+            'password' => 'required|string',
             'email' => 'required|string|unique:customers',
-            'gender' => 'string'
+            'gender' => 'required|string'
         ]);
 
         //query building
@@ -105,12 +105,12 @@ class CustomerController extends Controller
             $gender = $request->input('gender');
 
             $datos = $request->validate([
-                'name' => 'string',
-                'phone' => 'string',
-                'age' => 'integer',
-                'password' => "string",
-                'email' => 'string|unique:customers',
-                'gender' => 'string'
+                'name' => 'required|string',
+                'phone' => 'nullable|string',
+                'age' => 'nullable|integer',
+                'password' => 'required|string',
+                'email' => 'required|string|unique:customers',
+                'gender' => 'required|string'
             ]);
             //query building
             DB::table('customers')->where('id', $id)->update($datos);
