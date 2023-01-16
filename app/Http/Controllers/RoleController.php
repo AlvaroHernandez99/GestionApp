@@ -7,17 +7,22 @@ use App\Models\Role;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
 
-class CustomerController extends Controller
+class RoleController extends Controller
 {
+    /*public function roles() {
+        return $this->belongsTo(Customer::Class);
+    }
+
+    public function getRoles(){
+        $roles = Customer::find(1)->roles;
+    }*/
+
     public function getAll(Request $request){
-        $respuesta = Customer::all();
+        $respuesta = Role::all();
         $response = [
             'success' => true,
-            'message' => "Clientes obtenidos correctamente",
+            'message' => "Roles obtenidos correctamente",
             'data' => $respuesta
         ];
         return response()->json($response);
@@ -25,10 +30,10 @@ class CustomerController extends Controller
 
     public function getId(Request $request, $id){
         try {
-            $respuesta = Customer::findOrFail($id);
+            $respuesta = Role::findOrFail($id);
             $response = [
                 'success' => true,
-                'message' => "Cliente con id: $id obtenido correctamente",
+                'message' => "Rol con id: $id obtenido correctamente",
                 'data' => $respuesta
             ];
             return response()->json($response);
@@ -39,30 +44,23 @@ class CustomerController extends Controller
             ];
             return response()->json($a);
         }
+
     }
 
     public function create(Request $request){
-        $name = $request->input('name');
-        $phone = $request->input('phone');
-        $age = $request->input('age');
-        $password = $request->input('password');
-        $email = $request->input('email');
-        $gender = $request->input('gender');
+        $rol = $request->input('rol');
+        $description = $request->input('description');
 
         $datos = $request->validate([
-            'name' => 'required|string',
-            'phone' => 'nullable|string',
-            'age' => 'nullable|integer',
-            'password' => 'required|string',
-            'email' => 'required|string|unique:customers',
-            'gender' => 'required|string'
+            'rol' => 'required|string',
+            'description' => 'nullable|string'
         ]);
 
         //query building
-        DB::table('customers')->insert($datos);
+        DB::table('roles')->insert($datos);
         $response = [
             'success' => true,
-            'message' => "Cliente creado correctamente",
+            'message' => "Rol creado correctamente",
             'data' => $datos
         ];
         return response()->json($response);
@@ -70,11 +68,11 @@ class CustomerController extends Controller
 
     public function delete(Request $request, $id){
         try {
-            $respuesta = Customer::findOrFail($id);
-            DB::table('customers')->where('id', $id)->delete();
+            $respuesta = Role::findOrFail($id);
+            DB::table('roles')->where('id', $id)->delete();
             $response = [
                 'success' => true,
-                'message' => "Cliente con id: $id borrado correctamente",
+                'message' => "Rol con id: $id borrado correctamente",
                 'data' => $respuesta
             ];
             return response()->json($response);
@@ -85,31 +83,24 @@ class CustomerController extends Controller
             ];
             return response()->json($a);
         }
+
     }
 
     public function modify(Request $request, $id){
         try {
-            Customer::findOrFail($id);
-            $name = $request->input('name');
-            $phone = $request->input('phone');
-            $age = $request->input('age');
-            $password = $request->input('password');
-            $email = $request->input('email');
-            $gender = $request->input('gender');
+            Role::findOrFail($id);
+            $rol = $request->input('rol');
+            $description = $request->input('description');
 
             $datos = $request->validate([
-                'name' => 'required|string',
-                'phone' => 'nullable|string',
-                'age' => 'nullable|integer',
-                'password' => 'required|string',
-                'email' => 'required|string|unique:customers',
-                'gender' => 'required|string'
+                'rol' => 'required|string',
+                'description' => 'nullable|string'
             ]);
             //query building
-            DB::table('customers')->where('id', $id)->update($datos);
+            DB::table('roles')->where('id', $id)->update($datos);
             $response = [
                 'success' => true,
-                'message' => "Cliente con id: $id modificado correctamente",
+                'message' => "Rol con id: $id modificado correctamente",
                 'data' => $datos
             ];
             return response()->json($response);
@@ -121,5 +112,4 @@ class CustomerController extends Controller
             return response()->json($a);
         }
     }
-    
 }

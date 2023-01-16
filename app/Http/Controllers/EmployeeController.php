@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\Role;
+use App\Models\Employee;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
 
-class CustomerController extends Controller
+class EmployeeController extends Controller
 {
     public function getAll(Request $request){
-        $respuesta = Customer::all();
+        $respuesta = Employee::all();
         $response = [
             'success' => true,
-            'message' => "Clientes obtenidos correctamente",
+            'message' => "Trabajadores obtenidos correctamente",
             'data' => $respuesta
         ];
         return response()->json($response);
@@ -25,10 +21,10 @@ class CustomerController extends Controller
 
     public function getId(Request $request, $id){
         try {
-            $respuesta = Customer::findOrFail($id);
+            $respuesta = Employee::findOrFail($id);
             $response = [
                 'success' => true,
-                'message' => "Cliente con id: $id obtenido correctamente",
+                'message' => "Trabajador con id: $id obtenido correctamente",
                 'data' => $respuesta
             ];
             return response()->json($response);
@@ -54,15 +50,15 @@ class CustomerController extends Controller
             'phone' => 'nullable|string',
             'age' => 'nullable|integer',
             'password' => 'required|string',
-            'email' => 'required|string|unique:customers',
+            'email' => 'required|string|unique:employees',
             'gender' => 'required|string'
         ]);
 
         //query building
-        DB::table('customers')->insert($datos);
+        DB::table('employees')->insert($datos);
         $response = [
             'success' => true,
-            'message' => "Cliente creado correctamente",
+            'message' => "Trabajador creado correctamente",
             'data' => $datos
         ];
         return response()->json($response);
@@ -70,11 +66,11 @@ class CustomerController extends Controller
 
     public function delete(Request $request, $id){
         try {
-            $respuesta = Customer::findOrFail($id);
-            DB::table('customers')->where('id', $id)->delete();
+            $respuesta = Employee::findOrFail($id);
+            DB::table('employees')->where('id', $id)->delete();
             $response = [
                 'success' => true,
-                'message' => "Cliente con id: $id borrado correctamente",
+                'message' => "Trabajador con id: $id borrado correctamente",
                 'data' => $respuesta
             ];
             return response()->json($response);
@@ -85,11 +81,12 @@ class CustomerController extends Controller
             ];
             return response()->json($a);
         }
+
     }
 
     public function modify(Request $request, $id){
         try {
-            Customer::findOrFail($id);
+            Employee::findOrFail($id);
             $name = $request->input('name');
             $phone = $request->input('phone');
             $age = $request->input('age');
@@ -102,14 +99,14 @@ class CustomerController extends Controller
                 'phone' => 'nullable|string',
                 'age' => 'nullable|integer',
                 'password' => 'required|string',
-                'email' => 'required|string|unique:customers',
+                'email' => 'required|string|unique:employees',
                 'gender' => 'required|string'
             ]);
             //query building
-            DB::table('customers')->where('id', $id)->update($datos);
+            DB::table('employees')->where('id', $id)->update($datos);
             $response = [
                 'success' => true,
-                'message' => "Cliente con id: $id modificado correctamente",
+                'message' => "Trabajador con id: $id modificado correctamente",
                 'data' => $datos
             ];
             return response()->json($response);
@@ -121,5 +118,4 @@ class CustomerController extends Controller
             return response()->json($a);
         }
     }
-    
 }
