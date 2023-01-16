@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Companycar;
+use App\Models\Car;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CompanycarController extends Controller
+class CarController extends Controller
 {
     public function getAll(Request $request){
-        $respuesta = Companycar::all();
+        $respuesta = Car::all();
         $response = [
             'success' => true,
             'message' => "Coches obtenidos correctamente",
@@ -21,7 +21,7 @@ class CompanycarController extends Controller
 
     public function getId(Request $request, $id){
         try {
-            $respuesta = Companycar::findOrFail($id);
+            $respuesta = Car::findOrFail($id);
             $response = [
                 'success' => true,
                 'message' => "Coche con id: $id obtenido correctamente",
@@ -51,7 +51,7 @@ class CompanycarController extends Controller
         ]);
 
         //query building
-        DB::table('companycars')->insert($datos);
+        DB::table('cars')->insert($datos);
         $response = [
             'success' => true,
             'message' => "Coche creado correctamente",
@@ -62,8 +62,8 @@ class CompanycarController extends Controller
 
     public function delete(Request $request, $id){
         try {
-            $respuesta = Companycar::findOrFail($id);
-            DB::table('companycars')->where('id', $id)->delete();
+            $respuesta = Car::findOrFail($id);
+            DB::table('cars')->where('id', $id)->delete();
             $response = [
                 'success' => true,
                 'message' => "Coche con id: $id borrado correctamente",
@@ -82,7 +82,7 @@ class CompanycarController extends Controller
 
     public function modify(Request $request, $id){
         try {
-            Companycar::findOrFail($id);
+            Car::findOrFail($id);
             $matricula = $request->input('matricula');
             $marca = $request->input('marca');
             $modelo = $request->input('modelo');
@@ -93,7 +93,7 @@ class CompanycarController extends Controller
                 'modelo' => 'nullable|string'
             ]);
             //query building
-            DB::table('companycars')->where('id', $id)->update($datos);
+            DB::table('cars')->where('id', $id)->update($datos);
             $response = [
                 'success' => true,
                 'message' => "Coche con id: $id modificado correctamente",
@@ -108,4 +108,10 @@ class CompanycarController extends Controller
             return response()->json($a);
         }
     }
+
+    public function employee(Request $request, $id) {
+        $companycar = Car::findOrFail($id);
+        return response()->json($companycar->employee);
+    }
+
 }

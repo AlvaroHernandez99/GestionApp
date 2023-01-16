@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class CompanycarsSeeder extends Seeder
+class CarsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,20 +15,23 @@ class CompanycarsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('companycars')->insert([
+        DB::table('cars')->insert([
             'matricula'=> '113456x',
             'marca' => 'renault',
-            'modelo' => 'laguna'
+            'modelo' => 'laguna',
+            'employee_id' => 1
         ]);
-        DB::table('companycars')->insert([
+        /*DB::table('companycars')->insert([
             'matricula'=> '123426x',
             'marca' => 'renault',
-            'modelo' => 'berlingo'
+            'modelo' => 'berlingo',
+            'employee_id' => 2
         ]);
         DB::table('companycars')->insert([
             'matricula'=> '123456x',
             'marca' => 'renault',
-            'modelo' => 'zafira'
-        ]);
+            'modelo' => 'zafira',
+            'employee_id' => 3
+        ]);*/
     }
 }

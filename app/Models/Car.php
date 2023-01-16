@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Companycar extends Model
+class Car extends Model
 {
     use HasFactory;
 
@@ -14,6 +14,8 @@ class Companycar extends Model
         'matricula',
         'marca',
         'modelo',
+        'employee_id'
+
     ];
 
     /**
@@ -25,4 +27,9 @@ class Companycar extends Model
         'created_at',
         'updated_at',
     ];
+
+
+    public function employee() {
+        return $this->belongsTo(Employee::class);
+    }
 }

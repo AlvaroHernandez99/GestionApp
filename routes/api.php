@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Http\Controllers\CompanycarController;
+use App\Http\Controllers\CarController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\RoleController;
@@ -39,23 +39,26 @@ Route::prefix('/customers')->group(function() {
 });
 
 
-Route::prefix('/companycars')->group(function() {
-    Route::get('', [CompanycarController::class, 'getAll']);
-    Route::get('/{id}', [CompanycarController::class, 'getId']);
-    Route::post('', [CompanycarController::class, 'create']);
-    Route::delete('/{id}', [CompanycarController::class, 'delete']);
-    Route::patch('/{id}', [CompanycarController::class, 'modify']);
+Route::prefix('/cars')->group(function() {
+    Route::get('', [CarController::class, 'getAll']);
+    Route::get('/{id}', [CarController::class, 'getId']);
+    Route::get('/{id}/employee', [CarController::class, 'employee']);
+    Route::post('', [CarController::class, 'create']);
+    Route::delete('/{id}', [CarController::class, 'delete']);
+    Route::patch('/{id}', [CarController::class, 'modify']);
 });
 
-Route::prefix('/companycars')->group(function() {
-    Route::middleware('verifyId')->get("/{id}",[CompanycarController::class, 'getId']);
-    Route::middleware('verifyId')->delete("/{id}",[CompanycarController::class, 'delete']);
-    Route::middleware('verifyId')->patch("/{id}",[CompanycarController::class, 'modify']);
+Route::prefix('/cars')->group(function() {
+    Route::middleware('verifyId')->get("/{id}",[CarController::class, 'getId']);
+    Route::middleware('verifyId')->delete("/{id}",[CarController::class, 'delete']);
+    Route::middleware('verifyId')->patch("/{id}",[CarController::class, 'modify']);
 });
 
 Route::prefix('/employees')->group(function() {
     Route::get('', [EmployeeController::class, 'getAll']);
     Route::get('/{id}', [EmployeeController::class, 'getId']);
+    Route::get('/{id}/role', [EmployeeController::class, 'role']);
+    Route::get('/{id}/car', [EmployeeController::class, 'car']);
     Route::post('', [EmployeeController::class, 'create']);
     Route::delete('/{id}', [EmployeeController::class, 'delete']);
     Route::patch('/{id}', [EmployeeController::class, 'modify']);
@@ -70,6 +73,7 @@ Route::prefix('/employees')->group(function() {
 Route::prefix('/roles')->group(function() {
     Route::get('', [RoleController::class, 'getAll']);
     Route::get('/{id}', [RoleController::class, 'getId']);
+    Route::get('/{id}/employees', [RoleController::class, 'employees']);
     Route::post('', [RoleController::class, 'create']);
     Route::delete('/{id}', [RoleController::class, 'delete']);
     Route::patch('/{id}', [RoleController::class, 'modify']);

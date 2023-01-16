@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
-    /*public function roles() {
-        return $this->belongsTo(Customer::Class);
-    }
-
-    public function getRoles(){
-        $roles = Customer::find(1)->roles;
-    }*/
 
     public function getAll(Request $request){
         $respuesta = Role::all();
@@ -111,5 +104,10 @@ class RoleController extends Controller
             ];
             return response()->json($a);
         }
+    }
+
+    public function employees(Request $request, $id) {
+        $role = Role::findOrFail($id);
+        return response()->json($role->employees);
     }
 }

@@ -13,11 +13,15 @@ class Role extends Model
         'id',
         'rol',
         'description',
-    ];    
+    ];
 
     protected $hidden = [
         'created_at',
         'updated_at',
         'remember_token',
     ];
+
+    public function employees() {
+        return $this->hasMany(Employee::class);
+    }
 }

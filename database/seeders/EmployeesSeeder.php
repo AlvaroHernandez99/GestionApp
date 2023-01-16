@@ -21,7 +21,8 @@ class EmployeesSeeder extends Seeder
             'age' => 23,
             'password' => 'contraseña1',
             'email' => 'juan@gmail.com',
-            'gender' => 'sexo'
+            'gender' => 'sexo',
+            'role_id' => 1
         ]);
         DB::table('employees')->insert([
             'name'=> 'perico',
@@ -29,7 +30,8 @@ class EmployeesSeeder extends Seeder
             'age' => 23,
             'password' => 'contraseña1',
             'email' => 'perico@gmail.com',
-            'gender' => 'sexo'
+            'gender' => 'sexo',
+            'role_id' => 2
         ]);
     }
 }

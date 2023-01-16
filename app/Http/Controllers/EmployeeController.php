@@ -118,4 +118,14 @@ class EmployeeController extends Controller
             return response()->json($a);
         }
     }
+
+    public function role(Request $request, $id) {
+        $employee = Employee::findOrFail($id);
+        return response()->json($employee->role);
+    }
+
+    public function car(Request $request, $id) {
+        $employee = Employee::findOrFail($id);
+        return response()->json($employee->car);
+    }
 }

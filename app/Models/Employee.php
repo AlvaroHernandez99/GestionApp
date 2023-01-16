@@ -27,4 +27,13 @@ class Employee extends Model
         'updated_at',
         'remember_token',
     ];
+
+    public function role() {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function car() {
+        return $this->hasOne(Car::class);
+    }
+
 }
