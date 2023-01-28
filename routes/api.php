@@ -93,6 +93,7 @@ Route::prefix('/roles')->group(function() {
 });
 
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logOut'])->middleware('auth:sanctum');
 Route::middleware('checkRecord')->post('/log', [LoginController::class, 'login']);
 Route::middleware('checkRecord')->post('/user', [LoginController::class, 'dataUser']);
 

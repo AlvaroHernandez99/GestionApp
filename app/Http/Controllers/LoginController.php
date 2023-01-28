@@ -50,22 +50,30 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
         if(Auth::attempt($data)) {
-
-            $obtained = Auth::user()->createToken("token");
+            $obtained = Auth::user();
             $response = [
                 'success' => true,
                 'message' => "You are logged and your data is:",
                 'data' => [
-                    "Your name is: " . $data['name'],
-                    "Your password is: " . $data['password'],
-
-                ],
-                'completeData' => $obtained
+                    "name" => "Your name is: " . $data['name'],
+                    "password" => "Your password is: " . $data['password'],
+                    'completeData' => $obtained
+                ]
             ];
             return response()->json($response, 200);
         }
-        //$obtained = Auth::user()->createToken("token");
+    }
 
+    public function logOut(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        if($request){
+            $response = [
+                'success' => true,
+                'message' => "Log out successfully",
+                'data' => null
+            ];
+            return response()->json($response, 200);
+        }
     }
 
 }

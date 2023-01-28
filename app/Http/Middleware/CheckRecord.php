@@ -29,7 +29,6 @@ class CheckRecord
             ];
             return response()->json($response, 200);
         }
-
         return $next($request);
     }
 }
