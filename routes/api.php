@@ -92,9 +92,10 @@ Route::prefix('/roles')->group(function() {
     Route::middleware('verifyId')->patch("/{id}",[RoleController::class, 'modify']);
 });
 
-
 Route::post('/login', [LoginController::class, 'login']);
-//Route::get('/me', [LoginController::class, 'whoAmI']);
+Route::middleware('checkRecord')->post('/log', [LoginController::class, 'login']);
+Route::middleware('checkRecord')->post('/user', [LoginController::class, 'dataUser']);
 
-/*Route::middleware('auth:sanctum')->get('/me', [LoginController::class, 'whoAmI']);*/
+
+
 
