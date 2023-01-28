@@ -114,6 +114,7 @@ class EmployeeController extends Controller
             return $a = [
                 'success' => false,
                 'message' => "Error, el Id introducido no existe ne la db"
+                //AÑADIR CODIGOS DE ERROR
             ];
             return response()->json($a);
         }
