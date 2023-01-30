@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
+
     //Recoge user y password y logeará al usuarui devolviendo un token
     public function login(Request $request) {
         $data = $request->validate([
@@ -44,7 +45,6 @@ class LoginController extends Controller
 
 
     public function dataUser(Request $request){
-
         $data = $request->validate([
             'name' => 'required',
             'password' => 'required'
@@ -64,8 +64,9 @@ class LoginController extends Controller
         }
     }
 
+
     public function logOut(Request $request){
-        $request->user()->currentAccessToken()->delete();
+        Auth::guard('sanctum')->user()->tokens()->delete();
         if($request){
             $response = [
                 'success' => true,
@@ -75,6 +76,5 @@ class LoginController extends Controller
             return response()->json($response, 200);
         }
     }
-
 }
 

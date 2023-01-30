@@ -92,11 +92,11 @@ Route::prefix('/roles')->group(function() {
     Route::middleware('verifyId')->patch("/{id}",[RoleController::class, 'modify']);
 });
 
+
+
+
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logOut'])->middleware('auth:sanctum');
-Route::middleware('checkRecord')->post('/log', [LoginController::class, 'login']);
-Route::middleware('checkRecord')->post('/user', [LoginController::class, 'dataUser']);
-
-
+Route::get('/logout', [LoginController::class, 'logOut'])->middleware('checkRecord');
+Route::middleware('checkRecord')->get('/user', [LoginController::class, 'dataUser']);
 
 

@@ -17,10 +17,6 @@ class CheckRecord
      */
     public function handle(Request $request, Closure $next)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'password' => 'required'
-        ]);
         if(!(Auth::guard("sanctum")->check())) {
             $response = [
                 'success' => false,
