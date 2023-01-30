@@ -96,7 +96,10 @@ Route::prefix('/roles')->group(function() {
 
 
 Route::post('/login', [LoginController::class, 'login']);
-Route::get('/logout', [LoginController::class, 'logOut'])->middleware('checkRecord');
+
+Route::middleware('checkRecord')->get('/logout', [LoginController::class, 'logOut']);
 Route::middleware('checkRecord')->get('/user', [LoginController::class, 'dataUser']);
+
+Route::get('/guest', [LoginController::class, 'guest']);
 
 

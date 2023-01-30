@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkRecord')->except(['login', 'guest']);
+    }
 
     //Recoge user y password y logeará al usuarui devolviendo un token
     public function login(Request $request) {
@@ -44,7 +48,7 @@ class LoginController extends Controller
     }
 
 
-    public function dataUser(Request $request){
+    public function dataUser(Request $request) {
         $data = $request->validate([
             'name' => 'required',
             'password' => 'required'
@@ -65,7 +69,7 @@ class LoginController extends Controller
     }
 
 
-    public function logOut(Request $request){
+    public function logOut(Request $request) {
         Auth::guard('sanctum')->user()->tokens()->delete();
         if($request){
             $response = [
@@ -75,6 +79,16 @@ class LoginController extends Controller
             ];
             return response()->json($response, 200);
         }
+    }
+
+
+    public function guest(Request $request) {
+        $response = [
+            'success' => true,
+            'message' => "successfully accessed",
+            'data' => "guest user"
+        ];
+        return response()->json($response, 200);
     }
 }
 
