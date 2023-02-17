@@ -2,31 +2,39 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\SessionGuard;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
+
 
 class LoginController extends Controller
 {
     public function __construct()
-    {
-        $this->middleware('checkRecord')->except(['login', 'guest']);
-    }
+    { }
 
     //Recoge user y password y logeará al usuarui devolviendo un token
     public function login(Request $request) {
+        /*if($request ->has('name')){
+            $data = $request->validate([
+                'email' => 'required|email:rfc',
+                /*'name' => 'required|string',
+                'password' => 'required|string'
+            ]);
+        }*/
         $data = $request->validate([
-            'name' => 'required',
-            'password' => 'required'
+            'email' => 'required|email:rfc',
+            'name' => 'required|string',
+            'password' => 'required|string'
         ]);
-        if(Auth::guard("sanctum")->check()) {
+        if(Auth::guard('api')->check()) {
             $response = [
                 'success' => true,
                 'message' => "You are logged",
                 'data' => "Your name is: " . $data['name']
             ];
-            return response()->json($response, 200);
+            return response()->json($response);
         //Una vez que el login se ga completado con attemp,
         // el usuario (instacioado de user) queda almacenado en la clase AUTH
         // al tener
@@ -37,7 +45,7 @@ class LoginController extends Controller
                 'message' => "You have logged in successfully",
                 'data' => $obtained
             ];
-            return response()->json($response, 200);
+            return response()->json($response);
         }
         $response = [
             'success' => false,
@@ -50,34 +58,36 @@ class LoginController extends Controller
 
     public function dataUser(Request $request) {
         $data = $request->validate([
-            'name' => 'required',
-            'password' => 'required'
+            'email' => 'required|string',
+            'name' => 'required|string',
+            'password' => 'required|string'
         ]);
-        if(Auth::attempt($data)) {
-            $obtained = Auth::user();
+        if(Auth::guard('api')->check()) {
+            $obtained = Auth::user()->createToken("token");
             $response = [
                 'success' => true,
-                'message' => "You are logged and your data is:",
+                'message' => "You are logged in sesion",
                 'data' => [
-                    "name" => "Your name is: " . $data['name'],
-                    "password" => "Your password is: " . $data['password'],
-                    'completeData' => $obtained
-                ]
+                    "nombre" => $data['name'],
+                    "email" => $data['email'],
+                    "troleito " => "Your token is: <PakkieressaberesoGG>",
+                    'DataToken' => $obtained
+                ],
             ];
-            return response()->json($response, 200);
+            return response()->json($response);
         }
     }
 
 
     public function logOut(Request $request) {
-        Auth::guard('sanctum')->user()->tokens()->delete();
+        Auth::guard('api')->user()->tokens()->delete();
         if($request){
             $response = [
                 'success' => true,
                 'message' => "Log out successfully",
                 'data' => null
             ];
-            return response()->json($response, 200);
+            return response()->json($response);
         }
     }
 
@@ -88,7 +98,40 @@ class LoginController extends Controller
             'message' => "successfully accessed",
             'data' => "guest user"
         ];
-        return response()->json($response, 200);
+        return response()->json($response);
     }
+
+    public function createUser (Request $request) {
+        try {
+            $id = User::insertGetId($request->validate([
+                'email' => 'required|email:rfc|unique:users',
+                'name' => 'required|string',
+                'password' => 'required|string'
+            ]));
+        } catch (Throwable $e) {
+            report($e);
+            $response = [
+                'success' => false,
+                'message' => 'Warning, the information is lost',
+                'data' => null
+            ];
+            return response()->json($response, 422);
+        }
+        if (is_numeric($id)) {
+            $response = [
+                'success' => true,
+                'message' => 'The user has created successfully',
+                'data' => User::findOrFail($id)
+            ];
+            return response()->json($response);
+        }
+    }
+
+
+
+
+
 }
+
+
 

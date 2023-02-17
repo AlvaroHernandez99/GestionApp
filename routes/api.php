@@ -96,10 +96,17 @@ Route::prefix('/roles')->group(function() {
 
 
 Route::post('/login', [LoginController::class, 'login']);
-
-Route::middleware('checkRecord')->get('/logout', [LoginController::class, 'logOut']);
-Route::middleware('checkRecord')->get('/user', [LoginController::class, 'dataUser']);
-
+Route::post('/create', [LoginController::class, 'createUser']);
+Route::middleware('auth:api')->get('/logout', [LoginController::class, 'logOut']);
+Route::middleware('auth:api')->get('/user', [LoginController::class, 'dataUser']);
 Route::get('/guest', [LoginController::class, 'guest']);
 
+
+
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});*/
+
+
+/*Route::post('/login', [LoginController::class, 'login']);*/
 

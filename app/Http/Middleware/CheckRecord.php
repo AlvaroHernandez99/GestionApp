@@ -20,14 +20,14 @@ class CheckRecord
 
     public function handle(Request $request, Closure $next)
     {
-
+    //
         if(!(Auth::guard("sanctum")->check())) {
             $response = [
                 'success' => false,
                 'message' => "You arent logged (not check)",
                 'data' => null
             ];
-            return response()->json($response, 200);
+            return response()->json($response, 401);
         }
         return $next($request);
     }
