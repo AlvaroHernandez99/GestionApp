@@ -16,39 +16,35 @@ class LoginController extends Controller
 
     //Recoge user y password y logeará al usuarui devolviendo un token
     public function login(Request $request) {
-        if ($request ->has('name')){
+        if ($request->has('name')){
             $data = $request->validate([
-                'name' => 'required|string|unique:users',
+                'name' => 'required|string',
                 'password' => 'required|string'
             ]);
             if (Auth::guard('api')->check()) {
                 $response = [
                     'success' => true,
                     'message' => "You are logged",
-                    'data' => [
-                        "Your name of sesion is: " . $data['name']
-                    ]
+                    'data' => "Your name of sesion is: " . $data['name']
                 ];
                 return response()->json($response);
             }
         }
-        if ($request ->has('email')){
+        elseif ($request->has('email')){
             $data = $request->validate([
-                'email' => 'required|email:rfc|unique:users',
+                'email' => 'required|string|email:rfc',
                 'password' => 'required|string'
             ]);
             if (Auth::guard('api')->check()) {
                 $response = [
                     'success' => true,
                     'message' => "You are logged",
-                    'data' => [
-                        "Your email of sesion is: " . $data['email']
-                    ]
+                    'data' => "Your email of sesion is: " . $data['email']
                 ];
                 return response()->json($response);
             }
         }
-        elseif (Auth::attempt($data)){
+        if (Auth::attempt($data)){
             $obtained = Auth::user()->createToken("token");
             $response = [
                 'success' => true,
@@ -67,24 +63,42 @@ class LoginController extends Controller
 
 
     public function dataUser(Request $request) {
-        $data = $request->validate([
-            'email' => 'required|string|unique:users',
-            'name' => 'required|string|unique:users',
-            'password' => 'required|string'
-        ]);
-        if(Auth::guard('api')->check()) {
-            $obtained = Auth::user()->createToken("token");
-            $response = [
-                'success' => true,
-                'message' => "You are logged in sesion",
-                'data' => [
-                    "nombre" => $data['name'],
-                    "email" => $data['email'],
-                    "troleito " => "Your token is: <PakkieressaberesoGG>",
-                    'DataToken' => $obtained
-                ],
-            ];
-            return response()->json($response);
+        $obtained = Auth::user()->createToken("token");
+        if ($request ->has('name')){
+            $data = $request->validate([
+                'name' => 'required|string',
+                'password' => 'required|string'
+            ]);
+            if (Auth::guard('api')->check()) {
+                $response = [
+                    'success' => true,
+                    'message' => "You are logged",
+                    'data' => [
+                        "nombre" => $data['name'],
+                        "troleito " => "Your token is: <PakkieressaberesoGG>",
+                        'DataToken' => $obtained
+                    ],
+                ];
+                return response()->json($response);
+            }
+        }
+        if ($request ->has('email')){
+            $data = $request->validate([
+                'email' => 'required|email:rfc',
+                'password' => 'required|string'
+            ]);
+            if (Auth::guard('api')->check()) {
+                $response = [
+                    'success' => true,
+                    'message' => "You are logged",
+                    'data' => [
+                        "email" => $data['email'],
+                        "troleito " => "Your token is: <PakkieressaberesoGG>",
+                        'DataToken' => $obtained
+                    ],
+                ];
+                return response()->json($response);
+            }
         }
     }
 
@@ -142,6 +156,8 @@ class LoginController extends Controller
 
 
 }
+
+
 
 
 
