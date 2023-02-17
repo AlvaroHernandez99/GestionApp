@@ -16,29 +16,39 @@ class LoginController extends Controller
 
     //Recoge user y password y logeará al usuarui devolviendo un token
     public function login(Request $request) {
-        /*if($request ->has('name')){
+        if ($request ->has('name')){
             $data = $request->validate([
-                'email' => 'required|email:rfc',
-                /*'name' => 'required|string',
+                'name' => 'required|string|unique:users',
                 'password' => 'required|string'
             ]);
-        }*/
-        $data = $request->validate([
-            'email' => 'required|email:rfc',
-            'name' => 'required|string',
-            'password' => 'required|string'
-        ]);
-        if(Auth::guard('api')->check()) {
-            $response = [
-                'success' => true,
-                'message' => "You are logged",
-                'data' => "Your name is: " . $data['name']
-            ];
-            return response()->json($response);
-        //Una vez que el login se ga completado con attemp,
-        // el usuario (instacioado de user) queda almacenado en la clase AUTH
-        // al tener
-        }elseif (Auth::attempt($data)){
+            if (Auth::guard('api')->check()) {
+                $response = [
+                    'success' => true,
+                    'message' => "You are logged",
+                    'data' => [
+                        "Your name of sesion is: " . $data['name']
+                    ]
+                ];
+                return response()->json($response);
+            }
+        }
+        if ($request ->has('email')){
+            $data = $request->validate([
+                'email' => 'required|email:rfc|unique:users',
+                'password' => 'required|string'
+            ]);
+            if (Auth::guard('api')->check()) {
+                $response = [
+                    'success' => true,
+                    'message' => "You are logged",
+                    'data' => [
+                        "Your email of sesion is: " . $data['email']
+                    ]
+                ];
+                return response()->json($response);
+            }
+        }
+        elseif (Auth::attempt($data)){
             $obtained = Auth::user()->createToken("token");
             $response = [
                 'success' => true,
@@ -58,8 +68,8 @@ class LoginController extends Controller
 
     public function dataUser(Request $request) {
         $data = $request->validate([
-            'email' => 'required|string',
-            'name' => 'required|string',
+            'email' => 'required|string|unique:users',
+            'name' => 'required|string|unique:users',
             'password' => 'required|string'
         ]);
         if(Auth::guard('api')->check()) {
@@ -105,7 +115,7 @@ class LoginController extends Controller
         try {
             $id = User::insertGetId($request->validate([
                 'email' => 'required|email:rfc|unique:users',
-                'name' => 'required|string',
+                'name' => 'required|string|unique:users',
                 'password' => 'required|string'
             ]));
         } catch (Throwable $e) {
