@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
+/*use phpseclib3\Crypt\Hash;*/
+
+
 class LoginController extends Controller
 {
     public function __construct()
@@ -125,13 +128,15 @@ class LoginController extends Controller
         return response()->json($response);
     }
 
+
+    /*FUNCION CREATE CON HASH..... NO VALIDA SI HAY EMAIL Y NAME CON EL MISMO NOMBRE...*/
     public function createUser (Request $request) {
         try {
-            $id = User::insertGetId($request->validate([
-                'email' => 'required|email:rfc|unique:users',
-                'name' => 'required|string|unique:users',
-                'password' => 'required|string'
-            ]));
+            $id = User::insertGetId([
+                'email' => $request->email,
+                'name' => $request->name,
+                'password' => Hash::make($request->password)
+            ]);
         } catch (Throwable $e) {
             report($e);
             $response = [
@@ -158,6 +163,29 @@ class LoginController extends Controller
 }
 
 
-
-
+/*public function createUser (Request $request) {
+    try {
+        $id = User::insertGetId($request->validate([
+            'email' => 'required|email:rfc|unique:users',
+            'name' => 'required|string|unique:users',
+            'password' => 'required|string'
+        ]));
+    } catch (Throwable $e) {
+        report($e);
+        $response = [
+            'success' => false,
+            'message' => 'Warning, the information is lost',
+            'data' => null
+        ];
+        return response()->json($response, 422);
+    }
+    if (is_numeric($id)) {
+        $response = [
+            'success' => true,
+            'message' => 'The user has created successfully',
+            'data' => User::findOrFail($id)
+        ];
+        return response()->json($response);
+    }
+}*/
 
