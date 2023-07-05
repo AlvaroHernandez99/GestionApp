@@ -4,6 +4,7 @@
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\HeroeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
@@ -24,6 +25,21 @@ use Illuminate\Support\Facades\Route;
 /*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });*/
+
+Route::prefix('/heroes')->group(function () {
+    Route::controller(HeroeController::class)->group(
+        function () {
+            Route::get('/search/{inputSearch}', 'search');
+            Route::get('', 'getAll');
+            Route::get('/{id}', 'getById');
+            Route::post('', 'create');
+            Route::delete('/{id}', 'delete');
+            Route::patch('/{id}', 'update');
+        }
+    );
+});
+
+
 
 Route::prefix('/customers')->group(function() {
     Route::get('', [CustomerController::class, 'getAll']);
@@ -100,6 +116,7 @@ Route::post('/create', [LoginController::class, 'createUser']);
 Route::middleware('auth:api')->get('/logout', [LoginController::class, 'logOut']);
 Route::middleware('auth:api')->get('/user', [LoginController::class, 'dataUser']);
 Route::get('/guest', [LoginController::class, 'guest']);
+
 
 
 
